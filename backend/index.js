@@ -9,6 +9,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
 
+
+
 mongooes.connect("mongodb://localhost:27017/auth",{
     useNewUrlParser:true,
     useUnifiedTopology:true
@@ -33,12 +35,33 @@ const DonorSchema = new mongooes.Schema({
     password: String
 })
 
+const CauseSchema = new mongooes.Schema({
+    orgName: String,
+    orgAdsress: String,
+    causeName: String,
+    causeDescription: String,
+    amount: String
+})
+
 const NGO = new mongooes.model("NGO", NgoSchema)
 const Donor = new mongooes.model("Donor",DonorSchema)
+const Cause = new mongooes.model("Cause",CauseSchema)
+
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.render("index",{details: null})
 })
+
+app.get("/getdetails", (req,res) => {
+    Cause.find({}, (err, allDetails) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send({allDetails})
+        }
+    })
+})
+
 
 app.post("/RegisterNGO",(req,res)=>{
     console.log(req.body) 
@@ -53,6 +76,27 @@ app.post("/RegisterNGO",(req,res)=>{
                     res.status(400).send(err)
                 }else{
                     res.status(200).send({message:"sucessfull"})
+                }
+            })
+        }
+    })
+})
+
+app.post("/CreateRequest",(req,res)=>{
+    console.log(req.body) 
+    const {orgName,orgAdsress,causeName,causeDescription,amount} =req.body;
+    Cause.findOne({causeName:causeName},(err,user)=>{
+        if(user){
+            console.log("in create req")
+            res.send({message:"Cause already exist"})
+        }else {
+            const user = new Cause({orgName,orgAdsress,causeName,causeDescription,amount})
+            user.save(err=>{
+                if(err){
+                    res.status(400).send(err)
+                }else{
+                    res.status(200).send({message:"sucessfull"})
+                    
                 }
             })
         }

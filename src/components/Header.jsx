@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navbar, Container, Dropdown, Button } from 'react-bootstrap';
 import { useLocation } from "react-router-dom";
-import logo from '../assets/sp2.jpeg'
+import logo from '../assets/gec.jpeg'
 
 export default function Header(props) {
     let history = useLocation();

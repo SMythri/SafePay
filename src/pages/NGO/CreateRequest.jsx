@@ -4,6 +4,7 @@ import NavBar from './NavBar'
 import { Form, Row, Col, Button, Container } from 'react-bootstrap'
 import { tokenAddress } from '../../constants';
 import { ethers } from 'ethers'
+import axios from 'axios';
 import donation from '../../artifacts/contracts/DonationToOrganization.sol/DonationToOrganization.json'
 
 export default function CreateRequest() {
@@ -13,6 +14,8 @@ export default function CreateRequest() {
     const [causeName, setCauseName] = React.useState()
     const [causeDescription, setCauseDescription] = React.useState()
     const [amount, setAmount] = React.useState(0)
+
+    
 
     async function requestAccount() {
         await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -33,6 +36,31 @@ export default function CreateRequest() {
           alert(`${amount} Coin/s successfully sent to create your donation to address ${orgAdsress}`);
         }
       }
+
+      const onSubmitHandler = (e) => {
+        e.preventDefault();
+        const user ={
+            orgName,
+            orgAdsress,
+            causeName,
+            causeDescription,
+            amount,
+            
+        }
+    if(amount){
+        if (orgName && orgAdsress && causeName && causeDescription && amount) {
+          axios.post("http://localhost:5000/CreateRequest", user)
+              .then((res) => {console.log(res)
+                  
+                alert("Registered Successfully,Please Login ")
+                navigate('/');
+              })
+      }
+    }
+}
+
+
+    
 
     return (
         <div>
@@ -83,7 +111,7 @@ export default function CreateRequest() {
                     <br/>
                     <br/>
                     <div className='d-flex justify-content-lg-between'>
-                        <Button variant="success" type="success" onClick={createNewRequest}>
+                        <Button variant="success" type="success" onClick={onSubmitHandler}>
                             Create Request
                         </Button>
                         

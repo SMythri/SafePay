@@ -6,32 +6,44 @@ import { tokenAddress } from '../../constants';
 import { ethers } from 'ethers'
 import donation from '../../artifacts/contracts/DonationToOrganization.sol/DonationToOrganization.json'
 import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 function DonateFunds() {
   const [orgName, setOrgName] = useState();
   const [causeName, setCauseName] = useState();
-  let data;
+  const [NGODetails, setNGODetails] = useState();
 
-  async function fetchGreeting() {
-    if (typeof window.ethereum !== 'undefined') {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      console.log({ provider })
-      const contract = new ethers.Contract(tokenAddress, donation.abi, provider)
-      console.log({ contract })
-      try {
-        console.log("Hi")
-        data = await contract.requests(0);
-        console.log('data: ', JSON.stringify(data))
-      } catch (err) {
-        console.log("Error: ", err)
-      }
-    }
+  async function getDetails() {
+    await axios.get("http://localhost:5000/getdetails").then((response) => {
+      setNGODetails(response.data.allDetails)
+    }).catch((error) => { console.log(error) })
   }
 
-  useEffect(() => {
-    fetchGreeting()
-  }, [])
+  useEffect(()=>{
+    getDetails();
+    
+  },[NGODetails])
+
+  // async function fetchGreeting() {
+  //   if (typeof window.ethereum !== 'undefined') {
+  //     const provider = new ethers.providers.Web3Provider(window.ethereum)
+  //     console.log({ provider })
+  //     const contract = new ethers.Contract(tokenAddress, donation.abi, provider)
+  //     console.log({ contract })
+  //     try {
+  //       console.log("Hi")
+  //       data = await contract.requests(0);
+  //       console.log('data: ', JSON.stringify(data))
+  //     } catch (err) {
+  //       console.log("Error: ", err)
+  //     }
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchGreeting()
+  // }, [])
 
   async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -48,15 +60,12 @@ function DonateFunds() {
       const contract = new ethers.Contract(tokenAddress, donation.abi, signer);
       const transaction = await contract.donate(orgName,causeName);
       await transaction.wait();
-      alert(` Donated successfully sent!!!`);
-      // const navigate = useNavigate();
-      // navigate('../');
+      alert(` Donation successfully sent!!!`);
     }
   }
   return (
     <>
-    {console.log(orgName)}
-      <NavBar></NavBar>
+      <NavBar />      
       <br></br>
       <Container fluid="md">
         <h1 className="mb-3 fs-3 fw-normal text-center ">DONATE HERE</h1>
@@ -70,10 +79,10 @@ function DonateFunds() {
                 <option selected disabled>
                   Available NGOs
                 </option>
-
-                <option>ABC</option>
-                <option >Give India Foundation</option>
-                <option>Care India</option>
+                {NGODetails?.map((item)=>{
+                  return (<option>{item?.orgName}</option>)
+                  
+                })}
               </Form.Select>
             </Col>
           </Form.Group>
@@ -87,9 +96,9 @@ function DonateFunds() {
                 <option selected disabled>
                   Cause
                 </option>
-                <option >education</option>
-                <option >Covid-19</option>
-                <option >Girl Eduaction</option>
+               {NGODetails?.map((item)=>{
+                return <option>{item.causeName}</option>
+               })}
               </Form.Select>
             </Col>
           </Form.Group>
