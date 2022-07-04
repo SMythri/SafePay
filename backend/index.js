@@ -1,24 +1,23 @@
 const express = require('express')
-const mongooes = require('mongoose')
+//const mongooes = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
-const apiPort = 5000
+//const apiPort = 5000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
 
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
+const mongooes = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+mongooes.connect(err => {
+  const collection = mongooes.db("test").collection("devices");
+  // perform actions on the collection object
 
 
-mongooes.connect("mongodb://localhost:27017/auth",{
-    useNewUrlParser:true,
-    useUnifiedTopology:true
-});()=>{
-    console.log("connected to DB")
-}
-
-const NgoSchema = new mongooes.Schema({
+  const NgoSchema = new mongooes.Schema({
     orgName: String,
     owner: String,
     aadhar: String,
@@ -151,5 +150,20 @@ app.post("/LoginDonor",(req,res)=>{
         }
     })
 });
+  mongooes.close();
+});
 
-app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
+
+
+
+
+// mongooes.connect("mongodb://localhost:27017/auth",{
+//     useNewUrlParser:true,
+//     useUnifiedTopology:true
+// });()=>{
+//     console.log("connected to DB")
+// }
+
+
+
+//app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
