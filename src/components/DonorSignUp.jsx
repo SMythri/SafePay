@@ -10,7 +10,7 @@ import './Style.css';
 
 export default function NGOSignUp() {
 
-    const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/RegisterDonor?retryWrites=true&w=majority";
+    const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
 
     const [donor, setDonor] = useState("");
     const [email, setEmail] = useState("");

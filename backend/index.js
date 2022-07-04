@@ -13,7 +13,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
 const mongooes = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 mongooes.connect(err => {
-  //const collection = mongooes.db("test").collection("devices");
+  const collection = mongooes.db("test").collection("devices");
   // perform actions on the collection object
 });()=>{
     console.log("connected to DB")
@@ -119,7 +119,7 @@ app.post("/LoginNGO",(req,res)=>{
     })
 });
 
-app.post("/RegisterDonor",(req,res)=>{
+app.post(uri,(req,res)=>{
     console.log(req.body) 
     const {donor,email,aadhar,walletAddress,password} =req.body;
     Donor.findOne({email:email},(err,user)=>{
