@@ -9,14 +9,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
 
+try {
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
 const mongooes = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
 mongooes.connect(err => {
   const collection = mongooes.db("test").collection("devices");
   // perform actions on the collection object
 });()=>{
     console.log("connected to DB")
+}
+}catch(error){
+    console.log("couldn't connect",error);
 }
 
   const NgoSchema = new mongooes.Schema({
