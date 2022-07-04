@@ -13,9 +13,11 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
 const mongooes = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 mongooes.connect(err => {
-  const collection = mongooes.db("test").collection("devices");
+  //const collection = mongooes.db("test").collection("devices");
   // perform actions on the collection object
-
+});()=>{
+    console.log("connected to DB")
+}
 
   const NgoSchema = new mongooes.Schema({
     orgName: String,
@@ -150,8 +152,8 @@ app.post("/LoginDonor",(req,res)=>{
         }
     })
 });
-  mongooes.close();
-});
+  //mongooes.close();
+//});
 
 
 
