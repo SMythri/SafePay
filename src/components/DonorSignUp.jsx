@@ -10,6 +10,8 @@ import './Style.css';
 
 export default function NGOSignUp() {
 
+    const uri = "mongodb+srv://mythri:#KaCjhnNMsDC6z-@cluster0.lzvtl8h.mongodb.net/?retryWrites=true&w=majority";
+
     const [donor, setDonor] = useState("");
     const [email, setEmail] = useState("");
     const [aadhar, setAdhaar] = useState("");
@@ -65,7 +67,7 @@ export default function NGOSignUp() {
         if (confirmPassword === password) {
 
             if (donor && email && aadhar.length === 16 && walletAddress && password) {
-                axios.post("http://localhost:5000/RegisterDonor", user)
+                axios.post(uri, user)
                     .then((res) => {
                         console.log(res)
                         alert("Registered Successfully,Please Login ")
