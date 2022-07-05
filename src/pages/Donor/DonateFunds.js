@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Row, Col, Container } from "react-bootstrap";
 import NavBar from "./NavBar";
-import { tokenAddress } from '../../constants';
-import { ethers } from 'ethers'
-import donation from '../../artifacts/contracts/DonationToOrganization.sol/DonationToOrganization.json'
-import { Navigate, useNavigate } from "react-router-dom";
+import { ethers } from "ethers";
+import donation from "../../artifacts/contracts/DonationToOrganization.sol/DonationToOrganization.json";
 import axios from "axios";
-
 
 function DonateFunds() {
   const [orgName, setOrgName] = useState();
@@ -15,57 +12,54 @@ function DonateFunds() {
   const [NGODetails, setNGODetails] = useState();
 
   async function getDetails() {
-    await axios.get("http://localhost:5000/getdetails").then((response) => {
-      setNGODetails(response.data.allDetails)
-    }).catch((error) => { console.log(error) })
+    await axios
+      .get("http://localhost:5000/getdetails")
+      .then((response) => {
+        setNGODetails(response.data.allDetails);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getDetails();
-    
-  },[NGODetails])
+  }, [NGODetails]);
 
-  // async function fetchGreeting() {
-  //   if (typeof window.ethereum !== 'undefined') {
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum)
-  //     console.log({ provider })
-  //     const contract = new ethers.Contract(tokenAddress, donation.abi, provider)
-  //     console.log({ contract })
-  //     try {
-  //       console.log("Hi")
-  //       data = await contract.requests(0);
-  //       console.log('data: ', JSON.stringify(data))
-  //     } catch (err) {
-  //       console.log("Error: ", err)
-  //     }
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   fetchGreeting()
-  // }, [])
-
+  async function setOrgNameFun(e) {
+    setCauseName(null);
+    e.preventDefault();
+    setOrgName(e.target.value);
+  }
   async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
   async function donate(e) {
-    e.preventDefault()
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
-      
+    e.preventDefault();
+    if (typeof window.ethereum !== "undefined") {
+      let tokenAddress;
+
+      NGODetails.forEach((item) => {
+        if (item.orgName === orgName && item.causeName === causeName) {
+          tokenAddress = item.orgAdsress;
+        }
+      });
+      await requestAccount();
+
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      
+
+      console.log("tokenAddress", tokenAddress);
       const contract = new ethers.Contract(tokenAddress, donation.abi, signer);
-      const transaction = await contract.donate(orgName,causeName);
+      const transaction = await contract.donate(orgName, causeName);
       await transaction.wait();
       alert(` Donation successfully sent!!!`);
     }
   }
   return (
     <>
-      <NavBar />      
+      <NavBar />
       <br></br>
       <Container fluid="md">
         <h1 className="mb-3 fs-3 fw-normal text-center ">DONATE HERE</h1>
@@ -75,13 +69,12 @@ function DonateFunds() {
               Name of the Organization
             </Form.Label>
             <Col sm="8">
-              <Form.Select value={orgName} onChange={e => setOrgName(e.target.value)}>
+              <Form.Select value={orgName} onChange={(e) => setOrgNameFun(e)}>
                 <option selected disabled>
                   Available NGOs
                 </option>
-                {NGODetails?.map((item)=>{
-                  return (<option>{item?.orgName}</option>)
-                  
+                {NGODetails?.map((item) => {
+                  return <option>{item?.orgName}</option>;
                 })}
               </Form.Select>
             </Col>
@@ -92,13 +85,18 @@ function DonateFunds() {
               Cause
             </Form.Label>
             <Col sm="8">
-              <Form.Select value={causeName} onChange={e => setCauseName(e.target.value)}>
+              <Form.Select
+                value={causeName}
+                onChange={(e) => setCauseName(e.target.value)}
+              >
                 <option selected disabled>
                   Cause
                 </option>
-               {NGODetails?.map((item)=>{
-                return <option>{item.causeName}</option>
-               })}
+                {NGODetails?.map((item) => {
+                  return item.orgName === orgName ? (
+                    <option>{item.causeName}</option>
+                  ) : null;
+                })}
               </Form.Select>
             </Col>
           </Form.Group>
