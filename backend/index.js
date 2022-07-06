@@ -97,7 +97,7 @@ app.post("/Donations", (req, res) => {
   });
 });
 
-app.get("/Donations", (req, res) => {
+app.get("/getDonationDetails", (req, res) => {
   Donations.find({}, (err, allDonations) => {
     if (err) {
       console.log(err);
