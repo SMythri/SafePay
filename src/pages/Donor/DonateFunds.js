@@ -10,6 +10,7 @@ function DonateFunds() {
   const [orgName, setOrgName] = useState();
   const [causeName, setCauseName] = useState();
   const [NGODetails, setNGODetails] = useState();
+  const [walletAddress, setWalletAddress] = useState("");
 
   async function getDetails() {
     await axios
@@ -21,6 +22,18 @@ function DonateFunds() {
         console.log(error);
       });
   }
+
+  const detailsOn = async () => {
+    const { ethereum } = window;
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    const addr = await signer.getAddress();
+    setWalletAddress(addr.toString());
+  };
+
+  useEffect(() => {
+    detailsOn();
+  }, [walletAddress]);
 
   useEffect(() => {
     getDetails();
@@ -49,12 +62,25 @@ function DonateFunds() {
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-
       console.log("tokenAddress", tokenAddress);
       const contract = new ethers.Contract(tokenAddress, donation.abi, signer);
       const transaction = await contract.donate(orgName, causeName);
       await transaction.wait();
-      alert(` Donation successfully sent!!!`);
+      if (!alert("Alert For your User!")) {
+        const userDonationDetails = {
+          walletAddress,
+          orgName,
+          causeName,
+          tokenAddress,
+        };
+        axios
+          .post("http://localhost:5000/Donations", userDonationDetails)
+          .then((res) => {
+            console.log(res);
+            // remove after sucess
+            alert("User donation details stored");
+          });
+      }
     }
   }
   return (

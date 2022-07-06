@@ -2,10 +2,11 @@ import React, { useState } from "react";
 // import image from "../../assets/oneee.jpg";
 import NavBar from "./NavBar";
 import { Card } from "react-bootstrap";
-import DonorProfile from './DonorProfile';
+import DonorProfile from "./DonorProfile";
 
 function DonorHomePage() {
   const [modalShow, setModalShow] = useState(false);
+
   return (
     <div>
       {/* style={{backgroundImage: `url(${image}` }} */}

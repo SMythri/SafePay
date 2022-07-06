@@ -42,6 +42,13 @@ const CauseSchema = new mongooes.Schema({
   beneficiaryNo: String,
 });
 
+const userDonationSchema = new mongooes.Schema({
+  userAddress: String,
+  orgAddress: String,
+  orgName: String,
+  causeName: String,
+});
+
 // const BeneficiarySchema = new mongooes.Schema({
 //   beneficiary: String,
 //   email: String,
@@ -56,6 +63,7 @@ const CauseSchema = new mongooes.Schema({
 const NGO = new mongooes.model("NGO", NgoSchema);
 const Donor = new mongooes.model("Donor", DonorSchema);
 const Cause = new mongooes.model("Cause", CauseSchema);
+const Donations = new mongooes.model("userDonations", userDonationSchema);
 //const Beneficiary = new mongooes.model("Beneficiary", BeneficiarySchema);
 
 app.get("/", (req, res) => {
@@ -71,6 +79,34 @@ app.get("/getdetails", (req, res) => {
     }
   });
 });
+
+app.post("/Donations", (req, res) => {
+  const { walletAddress, tokenAddress, orgName, causeName } = req.body;
+  const newDonation = new Donations({
+    userAddress: walletAddress,
+    orgAddress: tokenAddress,
+    orgName,
+    causeName,
+  });
+  newDonation.save((err) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send({ message: "sucessfull" });
+    }
+  });
+});
+
+// app.get("/getDonorDetails", (req, res) => {
+//   const { donor, email, aadhar, walletAddress, password } = req.body;
+//   Donor.findOne({ walletAddress}, (err, allDetails) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.send({ allDetails });
+//     }
+//   });
+// });
 
 app.post("/RegisterNGO", (req, res) => {
   console.log(req.body);

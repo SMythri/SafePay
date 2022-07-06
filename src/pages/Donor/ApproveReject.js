@@ -5,28 +5,24 @@ import axios from "axios";
 
 export default function ApproveReject() {
   const [NGODetails, setNGODetails] = useState();
-  const [vote, setVote] = useState(false);
-
   useEffect(() => {
     getDetails();
   }, []);
 
   async function upVote(cause) {
-    setVote(!vote);
     axios.post("http://localhost:5000/approve", cause).then((res) => {
       console.log(res);
     });
-    if (!alert("Alert For your User!")) {
+    if (!alert("Thank you for voting")) {
       window.location.reload();
     }
   }
 
   async function downVote(cause) {
-    setVote(!vote);
     axios.post("http://localhost:5000/reject", cause).then((res) => {
       console.log(res);
     });
-    if (!alert("Alert For your User!")) {
+    if (!alert("Thank you for voting")) {
       window.location.reload();
     }
   }
