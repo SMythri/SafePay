@@ -43,8 +43,8 @@ const CauseSchema = new mongooes.Schema({
 });
 
 const userDonationSchema = new mongooes.Schema({
-  userAddress: String,
-  orgAddress: String,
+  walletAddress: String,
+  tokenAddress: String,
   orgName: String,
   causeName: String,
 });
@@ -83,8 +83,8 @@ app.get("/getdetails", (req, res) => {
 app.post("/Donations", (req, res) => {
   const { walletAddress, tokenAddress, orgName, causeName } = req.body;
   const newDonation = new Donations({
-    userAddress: walletAddress,
-    orgAddress: tokenAddress,
+    walletAddress,
+    tokenAddress,
     orgName,
     causeName,
   });
@@ -97,16 +97,15 @@ app.post("/Donations", (req, res) => {
   });
 });
 
-// app.get("/getDonorDetails", (req, res) => {
-//   const { donor, email, aadhar, walletAddress, password } = req.body;
-//   Donor.findOne({ walletAddress}, (err, allDetails) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       res.send({ allDetails });
-//     }
-//   });
-// });
+app.get("/Donations", (req, res) => {
+  Donations.find({}, (err, allDonations) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({ allDonations });
+    }
+  });
+});
 
 app.post("/RegisterNGO", (req, res) => {
   console.log(req.body);
@@ -173,7 +172,8 @@ app.post("/CreateRequest", (req, res) => {
 
 app.post("/approve", (req, res) => {
   const { causeName, vote } = req.body;
-  let approveVote = vote + 1;
+  let approveVote = parseInt(vote) + 1;
+  approveVote.toString();
   Cause.findOneAndUpdate(
     { causeName: causeName },
     { $set: { vote: approveVote } },
@@ -189,7 +189,8 @@ app.post("/approve", (req, res) => {
 
 app.post("/reject", (req, res) => {
   const { causeName, vote } = req.body;
-  let approveVote = vote - 1;
+  let approveVote = parseInt(vote) - 1;
+  approveVote.toString();
   Cause.findOneAndUpdate(
     { causeName: causeName },
     { $set: { vote: approveVote } },
@@ -251,6 +252,16 @@ app.post("/LoginDonor", (req, res) => {
   });
 });
 
+// app.get("/getDonorDetails", (req, res) => {
+//   const { donor, email, aadhar, walletAddress, password } = req.body;
+//   Donor.findOne({ walletAddress}, (err, allDetails) => {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.send({ allDetails });
+//     }
+//   });
+// });
 // app.post("/RegisterBeneficiary", (req, res) => {
 //   console.log(req.body);
 //   const { beneficiary, email, aadhar, walletAddress, password } = req.body;
@@ -305,4 +316,5 @@ app.post("/LoginDonor", (req, res) => {
 //     }
 //   });
 // })
+
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
