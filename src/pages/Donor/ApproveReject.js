@@ -16,7 +16,9 @@ export default function ApproveReject() {
     axios.post("http://localhost:5000/approve", cause).then((res) => {
       console.log(res);
     });
-    alert("Thank You for voting");
+    if (!alert("Alert For your User!")) {
+      window.location.reload();
+    }
   }
 
   async function downVote(cause) {
@@ -24,7 +26,9 @@ export default function ApproveReject() {
     axios.post("http://localhost:5000/reject", cause).then((res) => {
       console.log(res);
     });
-    alert("Thank You for voting");
+    if (!alert("Alert For your User!")) {
+      window.location.reload();
+    }
   }
 
   async function getDetails() {
@@ -38,6 +42,7 @@ export default function ApproveReject() {
         console.log(error);
       });
   }
+
   return (
     <>
       <NavBar></NavBar>
