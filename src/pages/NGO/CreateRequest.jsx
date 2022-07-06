@@ -14,7 +14,9 @@ export default function CreateRequest() {
     const [causeName, setCauseName] = React.useState()
     const [causeDescription, setCauseDescription] = React.useState()
     const [amount, setAmount] = React.useState(0)
+    const [beneficiaryNo, setBeneficaryNo] = React.useState(0);
 
+    const vote = 0;
     
 
     async function requestAccount() {
@@ -39,13 +41,18 @@ export default function CreateRequest() {
 
       const onSubmitHandler = (e) => {
         e.preventDefault();
+
+        if(amount){
+            setBeneficaryNo(amount/100);
+        }
         const user ={
             orgName,
             orgAdsress,
             causeName,
             causeDescription,
             amount,
-            
+            vote, 
+            beneficiaryNo
         }
     if(amount){
         if (orgName && orgAdsress && causeName && causeDescription && amount) {

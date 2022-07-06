@@ -1,164 +1,92 @@
-import React from "react";
-import {
-  Button,
-  Stack,
-  Container,
-  Table,
-} from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Stack, Container, Table } from "react-bootstrap";
 import NavBar from "./NavBar";
+import axios from "axios";
 
 export default function ApproveReject() {
+  const [NGODetails, setNGODetails] = useState();
+  const [vote, setVote] = useState(false);
+
+  useEffect(() => {
+    getDetails();
+  }, []);
+
+  async function upVote(cause) {
+    setVote(!vote);
+    axios.post("http://localhost:5000/approve", cause).then((res) => {
+      console.log(res);
+    });
+    alert("Thank You for voting");
+  }
+
+  async function downVote(cause) {
+    setVote(!vote);
+    axios.post("http://localhost:5000/reject", cause).then((res) => {
+      console.log(res);
+    });
+    alert("Thank You for voting");
+  }
+
+  async function getDetails() {
+    await axios
+      .get("http://localhost:5000/getdetails")
+      .then((response) => {
+        setNGODetails(response.data.allDetails);
+        console.log(response.data.allDetails);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <>
       <NavBar></NavBar>
       <Container>
         <h1 className="mb-3 fs-3 fw-normal text-center ">Approve/Reject</h1>
         <Table bordered hover>
-          <thead className='text-center'>
+          <thead className="text-center">
             <tr>
               <th>#</th>
               <th>NGO Name</th>
-              <th>Wallet Address</th>
               <th>Cause Name</th>
-              <th>Amount Required</th>
               <th>Description</th>
-              <th>Approve/Reject</th>
+              <th>Amount Required</th>
+              <th>Wallet Address</th>
+              <th>Total Votes</th>
+              <th>Upvote/Downvote</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Smile Foundation</td>
-              <td>wert234shjitjk</td>
-              <td>Education</td>
-              <td>120 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Give India Foundation</td>
-              <td>1wcfgmjksldjun</td>
-              <td>Covid-19</td>
-              <td>130 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Care India</td>
-              <td>carpoytg567vfrt</td>
-              <td>Girl Eduaction</td>
-              <td>100 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Smile Foundation</td>
-              <td>wert234shjitjk</td>
-              <td>Education</td>
-              <td>120 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Give India Foundation</td>
-              <td>1wcfgmjksldjun</td>
-              <td>Covid-19</td>
-              <td>130 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Care India</td>
-              <td>carpoytg567vfrt</td>
-              <td>Girl Eduaction</td>
-              <td>100 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>Smile Foundation</td>
-              <td>wert234shjitjk</td>
-              <td>Education</td>
-              <td>120 Ether</td>
-              <td>
-                voluntary group or institution with a social mission, which
-                operates independently from the government
-              </td>
-              <td>
-                {" "}
-                <Stack direction="horizontal" gap={3}>
-                  <Button variant="outline-success">Approve</Button>
-                  <div className="vr" />
-                  <Button variant="outline-danger">Reject</Button>
-                </Stack>
-              </td>
-            </tr>
+            {NGODetails?.map((item, id) => {
+              return (
+                <tr key={id}>
+                  <td>{id}</td>
+                  <td>{item.orgName}</td>
+                  <td>{item.causeName}</td>
+                  <td>{item.causeDescription}</td>
+                  <td>{item.amount}</td>
+                  <td>{item.orgAdsress}</td>
+                  <td>{item.vote}</td>
+                  <td>
+                    <Stack direction="horizontal" gap={3}>
+                      <Button
+                        variant="outline-success"
+                        onClick={() => upVote(item)}
+                      >
+                        UpVote
+                      </Button>
+                      <div className="vr" />
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => downVote(item)}
+                      >
+                        DownVote
+                      </Button>
+                    </Stack>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </Container>
