@@ -346,7 +346,7 @@ app.post("/UpdateBeneficiary", (req, res) => {
 app.get("/getBeneficiary/:selectedWalletAddres/:causeName", (req, res) => {
   const { selectedWalletAddres, causeName } = req.params;
   Beneficiary.find(
-    { orgAdsress: selectedWalletAddres, causeName: causeName },
+    { $and: [{ orgAdsress: selectedWalletAddres }, { causeName: causeName }] },
     (err, allDonations) => {
       if (err) {
         console.log(err);
