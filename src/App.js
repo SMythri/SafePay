@@ -17,7 +17,7 @@ import BeneficiarySignUp from "./components/BeneficiarySignUp";
 import BeneficiaryHome from "./pages/Beneficiary/BeneficiaryHomePage";
 import RegisterToCause from "./pages/Beneficiary/RegisterToCause";
 import OurNGOs from "./pages/NGO/OurNGOs";
-
+import GiveFunds from "./pages/NGO/GiveFunds";
 import "./App.css";
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
           <Route path="/beneficiaryHomePage" element={<BeneficiaryHome />} />
           <Route path="/registerToCause" element={<RegisterToCause />} />
           <Route path="/allNGOS" element={<OurNGOs />} />
+          <Route path="/Fund/:cause/:walletAddress" element={<GiveFunds />} />
         </Routes>
         <Footer />
       </BrowserRouter>

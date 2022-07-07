@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Table, Container } from "react-bootstrap";
 import NavBar from "./NavBar";
 import { ethers } from "ethers";
+import { useNavigate } from 'react-router-dom';
+
 
 export default function OurNGOs() {
+  const navigate = useNavigate()
   const [causes, setAllCauses] = useState();
   const [walletAddress, setWalletAddress] = useState(null);
 
@@ -38,6 +41,9 @@ export default function OurNGOs() {
     getDetails();
   }, [walletAddress]);
 
+  async function fundingPage(item){
+    navigate(`/Fund/${item.causeName}/${item.orgAdsress}`)
+  }
   return (
     <>
       <NavBar />
@@ -63,7 +69,7 @@ export default function OurNGOs() {
                     <td>{item.causeName}</td>
                     <td>{item.causeDescription}</td>
                     <td>
-                      <button>DISTRIBUTE FUNDS</button>
+                      <button onClick={() => fundingPage(item)}>DISTRIBUTE FUNDS</button>
                     </td>
                   </tr>
                 );
