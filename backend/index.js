@@ -97,14 +97,18 @@ app.post("/Donations", (req, res) => {
   });
 });
 
-app.get("/getDonationDetails", (req, res) => {
-  Donations.find({}, (err, allDonations) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send({ allDonations });
+app.get("/Donations/:selectedWalletAddres", (req, res) => {
+  const { selectedWalletAddres } = req.params;
+  Donations.find(
+    { walletAddress: selectedWalletAddres },
+    (err, allDonations) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ allDonations });
+      }
     }
-  });
+  );
 });
 
 app.post("/RegisterNGO", (req, res) => {

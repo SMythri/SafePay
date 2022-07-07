@@ -5,9 +5,8 @@ import axios from "axios";
 import { ethers } from "ethers";
 
 export default function HistoryOfDonation() {
-  const [allDonation, setAllDonations] = useState("");
-  const [walletAddress, setWalletAddress] = useState("");
-  let filteredDonations;
+  const [allDonation, setAllDonations] = useState([]);
+  const [walletAddress, setWalletAddress] = useState(null);
 
   const detailsOn = async () => {
     const { ethereum } = window;
@@ -18,28 +17,25 @@ export default function HistoryOfDonation() {
   };
 
   async function getDetails() {
-    await axios
-      .get("http://localhost:5000/getDonationDetails")
-      .then((response) => {
-        setAllDonations(response.data.allDonations);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (walletAddress) {
+      await axios
+        .get(`http://localhost:5000/Donations/${walletAddress}`)
+        .then((response) => {
+          setAllDonations(response.data.allDonations);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   useEffect(() => {
     detailsOn();
-  }, [walletAddress]);
+  }, []);
 
   useEffect(() => {
     getDetails();
-
-    const values = Object.values(allDonation);
-    filteredDonations = values?.filter((item) => {
-      if (item.walletAddress === walletAddress) return item;
-    });
-  }, [allDonation]);
+  }, [walletAddress]);
 
   return (
     <>
@@ -48,7 +44,7 @@ export default function HistoryOfDonation() {
         <h1 className="mb-3 fs-3 fw-normal text-center ">
           History of Donations
         </h1>
-        {/* <Table striped bordered hover variant="dark">
+        <Table striped bordered hover variant="dark">
           <thead className="text-center">
             <tr>
               <th>#</th>
@@ -59,7 +55,7 @@ export default function HistoryOfDonation() {
             </tr>
           </thead>
           <tbody>
-            {filteredDonations?.map((item, id = 1) => {
+            {allDonation?.map((item, id) => {
               return (
                 <tr key={id}>
                   <td>{id}</td>
@@ -70,7 +66,7 @@ export default function HistoryOfDonation() {
               );
             })}
           </tbody>
-        </Table> */}
+        </Table>
       </Container>
     </>
   );
