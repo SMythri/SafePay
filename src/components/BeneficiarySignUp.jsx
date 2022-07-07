@@ -14,7 +14,8 @@ export default function BeneficiarySignUp() {
     const [walletAddress, setwalletAddress] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    const [orgAdsress,] = useState('');
+    const [causeName] = useState('');
     const [emailError, setEmailError] = useState(false);
     const [aadharError, setAdhaarError] = useState("");
 
@@ -54,7 +55,9 @@ export default function BeneficiarySignUp() {
             email,
             aadhar,
             walletAddress,
-            password
+            password,
+            orgAdsress, 
+            causeName
         }
 
         if (confirmPassword === password) {

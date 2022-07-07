@@ -19,11 +19,6 @@ function NavBar(props) {
               className="d-inline-block align-top"
             />{" "}
           </Navbar.Brand>
-          <Nav className="me-auto" variant="outline" activeKey="/donorHomePage">
-            {pathname !== "/donorHomePage" && (
-              <Nav.Link href="/donorHomePage">Home</Nav.Link>
-            )}
-          </Nav>
           <Dropdown>
             <Dropdown.Toggle variant="primary" id="dropdown">
               Profile
