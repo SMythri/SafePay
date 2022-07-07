@@ -8,15 +8,20 @@ import BeneficiarySignIn from "./BeneficiarySignIn";
 function Hero() {
   const [modalShow, setModalShow] = useState(false);
   const [modalDonor, setModalDonor] = useState(false);
+  const [modalBeneficiary, setModalBeneficiary] = useState(false);
 
   return (
     <>
-      <Header setModalShow={setModalShow} setModalDonor={setModalDonor} />
+      <Header
+        setModalShow={setModalShow}
+        setModalDonor={setModalDonor}
+        setModalBeneficiary={setModalBeneficiary}
+      />
       <NGOSignIn show={modalShow} onHide={() => setModalShow(false)} />
       <DonorSignIn show={modalDonor} onHide={() => setModalDonor(false)} />
       <BeneficiarySignIn
-        show={modalDonor}
-        onHide={() => setModalDonor(false)}
+        show={modalBeneficiary}
+        onHide={() => setModalBeneficiary(false)}
       />
       <Carousel fade>
         <Carousel.Item>

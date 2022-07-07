@@ -270,7 +270,15 @@ app.get("/Donations/:selectedWalletAddres", (req, res) => {
 /*  BENEFICIARY: REGISTER BENEFICIARY */
 app.post("/RegisterBeneficiary", (req, res) => {
   console.log(req.body);
-  const { beneficiary, email, aadhar, walletAddress, password } = req.body;
+  const {
+    beneficiary,
+    email,
+    aadhar,
+    walletAddress,
+    password,
+    orgAdsress,
+    causeName,
+  } = req.body;
   Beneficiary.findOne({ email: email }, (err, user) => {
     if (user) {
       res.send({ message: "user already exist" });
@@ -281,6 +289,8 @@ app.post("/RegisterBeneficiary", (req, res) => {
         aadhar,
         walletAddress,
         password,
+        orgAdsress,
+        causeName,
       });
       user.save((err) => {
         if (err) {
@@ -312,17 +322,24 @@ app.post("/LoginBeneficiary", (req, res) => {
 /*  BENEFICIARY: UPDATE BENEFICIARY ACCOUNT: POST CAUSE & ORG ADDRESS REGISTERED */
 app.post("/UpdateBeneficiary", (req, res) => {
   const { walletAddress, orgAdsress, causeName } = req.body;
-  Beneficiary.findOneAndUpdate(
-    { walletAddress: walletAddress },
-    { $set: { orgAdsress: orgAdsress, causeName: causeName } },
-    (err, newDetails) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send({ newDetails });
-      }
+
+  Beneficiary.findOne({ walletAddress: walletAddress }, (err, user) => {
+    if (user) {
+      Beneficiary.findOneAndUpdate(
+        { walletAddress: walletAddress },
+        { $set: { orgAdsress: orgAdsress, causeName: causeName } },
+        (err, newDetails) => {
+          if (err) {
+            console.log(err);
+          } else {
+            res.send({ newDetails });
+          }
+        }
+      );
+    } else {
+      res.status(400).send("not registered");
     }
-  );
+  });
 });
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));

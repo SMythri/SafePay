@@ -11,6 +11,8 @@ function DonateFunds() {
   const [causeName, setCauseName] = useState();
   const [NGODetails, setNGODetails] = useState();
   const [walletAddress, setWalletAddress] = useState("");
+  const [beforeTransactionBalance, setBeforeBalance] = useState("");
+  const [afterTransactionBalance, setAfterBalance] = useState("");
 
   async function getDetails() {
     await axios
@@ -48,6 +50,18 @@ function DonateFunds() {
     await window.ethereum.request({ method: "eth_requestAccounts" });
   }
 
+  async function getBalance() {
+    const accounts = await window.ethereum.request({
+      method: "eth_requestAccounts",
+    });
+    const balance = await window.ethereum.request({
+      method: "eth_getBalance",
+      params: [accounts[0], "latest"],
+    });
+    let amountBalance = parseInt(balance, 16) / Math.pow(10, 18);
+    return amountBalance;
+  }
+
   async function donate(e) {
     e.preventDefault();
     if (typeof window.ethereum !== "undefined") {
@@ -62,6 +76,8 @@ function DonateFunds() {
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+
+      setBeforeBalance(getBalance());
       console.log("tokenAddress", tokenAddress);
       const contract = new ethers.Contract(tokenAddress, donation.abi, signer);
       const transaction = await contract.donate(orgName, causeName);
@@ -82,6 +98,14 @@ function DonateFunds() {
           });
       }
     }
+    setAfterBalance(getBalance());
+
+    console.log(
+      "Hello",
+      beforeTransactionBalance,
+      afterTransactionBalance,
+      beforeTransactionBalance - afterTransactionBalance
+    );
   }
   return (
     <>
