@@ -27,6 +27,7 @@ export default function Header(props) {
                     <Dropdown.Menu>
                         <Dropdown.Item href="#" onClick={() => props.setModalShow(true)}>NGO</Dropdown.Item>
                         <Dropdown.Item href="#"onClick={() => props.setModalDonor(true)}>Donor</Dropdown.Item>
+                        <Dropdown.Item href="#"onClick={() => props.setModalDonor(true)}>Beneficiary</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>}
                 {pathname !=='/' && pathname !=='/donorRegistration' && pathname !== '/ngoRegistration' && <Button variant='danger'>Log Out</Button>}

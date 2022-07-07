@@ -13,6 +13,10 @@ import AvlNGO from "./pages/Donor/AvlNGO";
 import HistoryOfDonation from "./pages/Donor/HistoryOfDonation";
 import History from "./pages/NGO/History";
 import CreateRequest from "./pages/NGO/CreateRequest";
+import BeneficiarySignUp from "./components/BeneficiarySignUp";
+import BeneficiaryHome from "./pages/Beneficiary/BeneficiaryHomePage";
+import RegisterToCause from "./pages/Beneficiary/RegisterToCause";
+
 import "./App.css";
 
 function App() {
@@ -31,6 +35,12 @@ function App() {
           <Route path="/donateFunds" element={<DonateFunds />} />
           <Route path="/avlngo" element={<AvlNGO />} />
           <Route path="/historyofdonation" element={<HistoryOfDonation />} />
+          <Route
+            path="/beneficiaryRegistration"
+            element={<BeneficiarySignUp />}
+          />
+          <Route path="/beneficiaryHomePage" element={<BeneficiaryHome />} />
+          <Route path="/registerToCause" element={<RegisterToCause />} />
         </Routes>
         <Footer />
       </BrowserRouter>

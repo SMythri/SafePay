@@ -4,7 +4,7 @@ import { Carousel, Card } from "react-bootstrap";
 import Header from "./Header";
 import NGOSignIn from "./NGOSignIn";
 import DonorSignIn from "./DonorSignIn";
-
+import BeneficiarySignIn from "./BeneficiarySignIn";
 function Hero() {
   const [modalShow, setModalShow] = useState(false);
   const [modalDonor, setModalDonor] = useState(false);
@@ -14,6 +14,10 @@ function Hero() {
       <Header setModalShow={setModalShow} setModalDonor={setModalDonor} />
       <NGOSignIn show={modalShow} onHide={() => setModalShow(false)} />
       <DonorSignIn show={modalDonor} onHide={() => setModalDonor(false)} />
+      <BeneficiarySignIn
+        show={modalDonor}
+        onHide={() => setModalDonor(false)}
+      />
       <Carousel fade>
         <Carousel.Item>
           <img
