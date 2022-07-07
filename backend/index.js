@@ -70,47 +70,7 @@ app.get("/", (req, res) => {
   res.render("index", { details: null });
 });
 
-app.get("/getdetails", (req, res) => {
-  Cause.find({}, (err, allDetails) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send({ allDetails });
-    }
-  });
-});
-
-app.post("/Donations", (req, res) => {
-  const { walletAddress, tokenAddress, orgName, causeName } = req.body;
-  const newDonation = new Donations({
-    walletAddress,
-    tokenAddress,
-    orgName,
-    causeName,
-  });
-  newDonation.save((err) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.status(200).send({ message: "sucessfull" });
-    }
-  });
-});
-
-app.get("/Donations/:selectedWalletAddres", (req, res) => {
-  const { selectedWalletAddres } = req.params;
-  Donations.find(
-    { walletAddress: selectedWalletAddres },
-    (err, allDonations) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send({ allDonations });
-      }
-    }
-  );
-});
-
+/* NGO: TO REGISTER AS AN NGO */
 app.post("/RegisterNGO", (req, res) => {
   console.log(req.body);
   const { orgName, owner, aadhar, certificate, orgAddress, password } =
@@ -138,6 +98,23 @@ app.post("/RegisterNGO", (req, res) => {
   });
 });
 
+/* NGO: TO LOGIN AS AN NGO */
+app.post("/LoginNGO", (req, res) => {
+  const { orgAddress, password } = req.body;
+  NGO.findOne({ orgAddress: orgAddress }, (err, user) => {
+    if (user) {
+      if (password === user.password) {
+        res.status(200).send({ message: "login sucess", user: user });
+      } else {
+        res.status(401).send({ message: "wrong credentials" });
+      }
+    } else {
+      res.status(400).send("not registered");
+    }
+  });
+});
+
+/* NGO: TO CREATE A CAUSE */
 app.post("/CreateRequest", (req, res) => {
   console.log(req.body);
   const {
@@ -174,7 +151,20 @@ app.post("/CreateRequest", (req, res) => {
   });
 });
 
+/* NGO: CAUSE GET ALL THE CAUSES*/
+app.get("/getdetails", (req, res) => {
+  Cause.find({}, (err, allDetails) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({ allDetails });
+    }
+  });
+});
+
+/* NGO: CAUSE: TO UPVOTE A CAUSE */
 app.post("/approve", (req, res) => {
+  // to upvote a cause listed
   const { causeName, vote } = req.body;
   let approveVote = parseInt(vote) + 1;
   approveVote.toString();
@@ -191,6 +181,7 @@ app.post("/approve", (req, res) => {
   );
 });
 
+/* NOG: CAUSE: TO DOWNVOTE A CAUSE */
 app.post("/reject", (req, res) => {
   const { causeName, vote } = req.body;
   let approveVote = parseInt(vote) - 1;
@@ -207,21 +198,8 @@ app.post("/reject", (req, res) => {
     }
   );
 });
-app.post("/LoginNGO", (req, res) => {
-  const { orgAddress, password } = req.body;
-  NGO.findOne({ orgAddress: orgAddress }, (err, user) => {
-    if (user) {
-      if (password === user.password) {
-        res.status(200).send({ message: "login sucess", user: user });
-      } else {
-        res.status(401).send({ message: "wrong credentials" });
-      }
-    } else {
-      res.status(400).send("not registered");
-    }
-  });
-});
 
+/* DONOR: TO REGISTER AS DONOR */
 app.post("/RegisterDonor", (req, res) => {
   console.log(req.body);
   const { donor, email, aadhar, walletAddress, password } = req.body;
@@ -241,6 +219,7 @@ app.post("/RegisterDonor", (req, res) => {
   });
 });
 
+/* DONOR: TO LOGIN AS DONOR */
 app.post("/LoginDonor", (req, res) => {
   const { walletAddress, password } = req.body;
   Donor.findOne({ walletAddress: walletAddress }, (err, user) => {
@@ -254,6 +233,39 @@ app.post("/LoginDonor", (req, res) => {
       res.status(400).send("not registered");
     }
   });
+});
+
+/* DONOR: USERDONATION: TO LOG A DONATION MADE */
+app.post("/Donations", (req, res) => {
+  const { walletAddress, tokenAddress, orgName, causeName } = req.body;
+  const newDonation = new Donations({
+    walletAddress,
+    tokenAddress,
+    orgName,
+    causeName,
+  });
+  newDonation.save((err) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send({ message: "sucessfull" });
+    }
+  });
+});
+
+/* DONOR: USERDONATION: TO GET ALL DONATIONS MADE FROM 1 USER */
+app.get("/Donations/:selectedWalletAddres", (req, res) => {
+  const { selectedWalletAddres } = req.params;
+  Donations.find(
+    { walletAddress: selectedWalletAddres },
+    (err, allDonations) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ allDonations });
+      }
+    }
+  );
 });
 
 // app.get("/getDonorDetails", (req, res) => {
