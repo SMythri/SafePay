@@ -39,9 +39,9 @@ const CauseSchema = new mongooes.Schema({
   causeDescription: String,
   amount: String,
   vote: String,
-  beneficiaryNo: String,
 });
 
+/* SCHEMA FOR DONOR - CAUSE */
 const userDonationSchema = new mongooes.Schema({
   walletAddress: String,
   tokenAddress: String,
@@ -49,22 +49,21 @@ const userDonationSchema = new mongooes.Schema({
   causeName: String,
 });
 
-// const BeneficiarySchema = new mongooes.Schema({
-//   beneficiary: String,
-//   email: String,
-//   aadhar: String,
-//   walletAddress: String,
-//   password: String,
-//   orgAdsress: String,
-//   causeName: String,
-//   beneficiaryNo: String,
-// });
+const BeneficiarySchema = new mongooes.Schema({
+  beneficiary: String,
+  email: String,
+  aadhar: String,
+  walletAddress: String,
+  password: String,
+  orgAdsress: String,
+  causeName: String,
+});
 
 const NGO = new mongooes.model("NGO", NgoSchema);
 const Donor = new mongooes.model("Donor", DonorSchema);
 const Cause = new mongooes.model("Cause", CauseSchema);
 const Donations = new mongooes.model("userDonations", userDonationSchema);
-//const Beneficiary = new mongooes.model("Beneficiary", BeneficiarySchema);
+const Beneficiary = new mongooes.model("Beneficiary", BeneficiarySchema);
 
 app.get("/", (req, res) => {
   res.render("index", { details: null });
@@ -181,7 +180,7 @@ app.post("/approve", (req, res) => {
   );
 });
 
-/* NOG: CAUSE: TO DOWNVOTE A CAUSE */
+/* NGO: CAUSE: TO DOWNVOTE A CAUSE */
 app.post("/reject", (req, res) => {
   const { causeName, vote } = req.body;
   let approveVote = parseInt(vote) - 1;
@@ -268,69 +267,62 @@ app.get("/Donations/:selectedWalletAddres", (req, res) => {
   );
 });
 
-// app.get("/getDonorDetails", (req, res) => {
-//   const { donor, email, aadhar, walletAddress, password } = req.body;
-//   Donor.findOne({ walletAddress}, (err, allDetails) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       res.send({ allDetails });
-//     }
-//   });
-// });
-// app.post("/RegisterBeneficiary", (req, res) => {
-//   console.log(req.body);
-//   const { beneficiary, email, aadhar, walletAddress, password } = req.body;
-//   Beneficiary.findOne({ email: email }, (err, user) => {
-//     if (user) {
-//       res.send({ message: "user already exist" });
-//     } else {
-//       const user = new Beneficiary({
-//         beneficiary,
-//         email,
-//         aadhar,
-//         walletAddress,
-//         password,
-//       });
-//       user.save((err) => {
-//         if (err) {
-//           res.status(400).send(err);
-//         } else {
-//           res.status(200).send({ message: "sucessfull" });
-//         }
-//       });
-//     }
-//   });
-// });
+/*  BENEFICIARY: REGISTER BENEFICIARY */
+app.post("/RegisterBeneficiary", (req, res) => {
+  console.log(req.body);
+  const { beneficiary, email, aadhar, walletAddress, password } = req.body;
+  Beneficiary.findOne({ email: email }, (err, user) => {
+    if (user) {
+      res.send({ message: "user already exist" });
+    } else {
+      const user = new Beneficiary({
+        beneficiary,
+        email,
+        aadhar,
+        walletAddress,
+        password,
+      });
+      user.save((err) => {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          res.status(200).send({ message: "sucessfull" });
+        }
+      });
+    }
+  });
+});
 
-// app.post("/LoginBeneficiary", (req, res) => {
-//   const { walletAddress, password } = req.body;
-//   Beneficiary.findOne({ walletAddress: walletAddress }, (err, user) => {
-//     if (user) {
-//       if (password === user.password) {
-//         res.status(200).send({ message: "login sucess", user: user });
-//       } else {
-//         res.status(401).send({ message: "wrong credentials" });
-//       }
-//     } else {
-//       res.status(400).send("not registered");
-//     }
-//   });
-// });
+/*  BENEFICIARY: LOGIN BENEFICIARY */
+app.post("/LoginBeneficiary", (req, res) => {
+  const { walletAddress, password } = req.body;
+  Beneficiary.findOne({ walletAddress: walletAddress }, (err, user) => {
+    if (user) {
+      if (password === user.password) {
+        res.status(200).send({ message: "login sucess", user: user });
+      } else {
+        res.status(401).send({ message: "wrong credentials" });
+      }
+    } else {
+      res.status(400).send("not registered");
+    }
+  });
+});
 
-// app.post("/LoginBeneficiary/RegisterCause", (req,res)=>{
-//   const { walletAddress, orgName, causeName,  } = req.body;
-//   Beneficiary.findOne({ walletAddress: walletAddress }, (err, user) => {
-//     if (user) {
-//       Cause.findOne({orgName: orgName, causeName: causeName}, (err, causeExists) =>{
-//         if(causeExists){
-
-//         }
-//       })
-//     } else {
-//       res.status(400).send("not registered user");
-//     }
-//   });
-// })
+/*  BENEFICIARY: UPDATE BENEFICIARY ACCOUNT: POST CAUSE & ORG ADDRESS REGISTERED */
+app.post("/UpdateBeneficiary", (req, res) => {
+  const { walletAddress, orgAdsress, causeName } = req.body;
+  Beneficiary.findOneAndUpdate(
+    { walletAddress: walletAddress },
+    { $set: { orgAdsress: orgAdsress, causeName: causeName } },
+    (err, newDetails) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ newDetails });
+      }
+    }
+  );
+});
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
