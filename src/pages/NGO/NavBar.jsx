@@ -23,8 +23,8 @@ export default function NavBar(props) {
                     <Nav className="me-auto">
                     {pathname !== '/createrequest' &&
                         <Nav.Link href="/createrequest">Create Request</Nav.Link>}
-                    {pathname !== '/ngohistory' &&
-                        <Nav.Link href="/ngohistory">History</Nav.Link>}
+                    {pathname !== '/allNGOS' &&
+                        <Nav.Link href="/allNGOS">All Causes of your NGO</Nav.Link>}
                     </Nav>
                     <Nav>
                     <Form className="d-flex">

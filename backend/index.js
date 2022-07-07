@@ -342,4 +342,30 @@ app.post("/UpdateBeneficiary", (req, res) => {
   });
 });
 
+/*  BENEFICIARY: GET BENEFICIARIES FOR GIVEN ADDRESS */
+app.get("/getBeneficiary/:selectedWalletAddres/:causeName", (req, res) => {
+  const { selectedWalletAddres, causeName } = req.params;
+  Beneficiary.find(
+    { orgAdsress: selectedWalletAddres, causeName: causeName },
+    (err, allDonations) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send({ allDonations });
+      }
+    }
+  );
+});
+/* NGO: ALL CAUSE FROM A PARTICULAR NGO */
+app.get("/getdetails/:selectedWalletAddres", (req, res) => {
+  const { selectedWalletAddres } = req.params;
+  Cause.find({ orgAdsress: selectedWalletAddres }, (err, allDetails) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send({ allDetails });
+    }
+  });
+});
+
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));

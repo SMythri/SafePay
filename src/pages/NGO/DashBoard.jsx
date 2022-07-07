@@ -16,7 +16,6 @@ export default function DashBoard() {
 
   useEffect(() => {
     getDetails();
-    console.log("in dashboard")
   }, [NGODetails])
   return (
     <>
